@@ -1,0 +1,30 @@
+{
+  "name": "full_stack_server_mid_term",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ac8274/Full_Stack_Server_Mid_Term.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/ac8274/Full_Stack_Server_Mid_Term/issues"
+  },
+  "homepage": "https://github.com/ac8274/Full_Stack_Server_Mid_Term#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
