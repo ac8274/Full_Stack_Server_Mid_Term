@@ -16,7 +16,7 @@ export const usersAuthService = {
         if(!user){
             throw {
                 status: 404,
-                Error: "No user with Emial: '" + email + "'"
+                Error: "No user with Email: '" + email + "'"
             }
         }
         else if(crypto.createHash("md5").update(password).digest('hex') !== user["Password"]){
@@ -36,13 +36,26 @@ export const usersAuthService = {
         const user = await UsersDAL.getUserByUID(uid)
         if(!user){
             throw {
-                status: 401,
+                status: 404,
                 Error: "No user found"
             }
         }
         else{
             UsersDAL.updatePasswordByUID(uid,crypto.createHash("md5").update(password).digest('hex'))
-            return {status: 200};
+            return {status: 204};
+        }
+    },
+    deleteUser: async (uid) => {
+        const user = await UsersDAL.getUserByUID(uid)
+        if(!user){
+            throw {
+                status: 404,
+                Error: "No user found"
+            }
+        }
+        else{
+            UsersDAL.deleteUserByUID(uid)
+            return {status: 204};
         }
     }
 }

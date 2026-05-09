@@ -19,5 +19,9 @@ export const UsersDAL = {
     updatePasswordByUID: (uid,password) => {
         const user = usersDB.findIndex((userInfo) => {return userInfo["UID"] === uid})
         usersDB[user]["Password"] = password;
+    },
+    deleteUserByUID: (uid) => {
+        const user = usersDB.findIndex((userInfo) => {return userInfo["UID"] === uid})
+        usersDB.splice(user,1);
     }
 }

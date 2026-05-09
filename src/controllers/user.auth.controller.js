@@ -1,34 +1,33 @@
 import { usersAuthService } from "../services/user.auth.service.js";
+import { basicStringCheck } from "../utils/utility.js";
 
 export const registerUser = async (req,res) => {
     try{
         if(!req.body){
             throw {
                 status: 400,
-                Error: "No body found"
+                Error: "No User Credentialls found"
             }
         }
         const {email: userEmail, password: userPassword} = req.body;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //found online
-        if(!userEmail || !userPassword)
+
+        const checkPassword = basicStringCheck(userPassword,400,"Password")
+        const checkEmail = basicStringCheck(userEmail,400,"Email")
+        if(checkPassword && checkEmail)
         {
-            let response = ""
-            if(!userEmail){response += "Email wasn't sent!\n"}
-            if(!userPassword){response += "Password wasn't sent!\n"}
             throw {
                 status: 400,
-                Error: `${response}`
+                Error: checkEmail["Error"] + checkPassword["Error"]
             }
         }
-        else if(typeof(userEmail) !== typeof("") || typeof(userPassword) !== typeof(""))
+        else if(checkEmail)
         {
-            let response = ""
-            if(typeof(userEmail) !== typeof("")){response += "Email must be 'String'\n"}
-            if(typeof(userPassword) !== typeof("")){response += "Password must be 'String'\n"}
-            throw {
-                status: 400,
-                Error: `${response}`
-            }
+            throw checkEmail;
+        }
+        else if(checkPassword)
+        {
+            throw checkPassword
         }
         else if(!emailRegex.test(userEmail)){throw {status: 400, Error: "Fabricated email provided"}}
         else{
@@ -47,30 +46,28 @@ export const logInUser = async (req,res) => {
         if(!req.body){
             throw {
                 status: 400,
-                Error: "No body found"
+                Error: "No User Credentialls found"
             }
         }
         const {email: userEmail, password: userPassword} = req.body;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //found online
-        if(!userEmail || !userPassword)
+
+        const checkPassword = basicStringCheck(userPassword,400,"Password")
+        const checkEmail = basicStringCheck(userEmail,400,"Email")
+        if(checkPassword && checkEmail)
         {
-            let response = ""
-            if(!userEmail){response += "Email wasn't sent!\n"}
-            if(!userPassword){response += "Password wasn't sent!\n"}
             throw {
                 status: 400,
-                Error: `${response}`
+                Error: checkEmail["Error"] + checkPassword["Error"]
             }
         }
-        else if(typeof(userEmail) !== typeof("") || typeof(userPassword) !== typeof(""))
+        else if(checkEmail)
         {
-            let response = ""
-            if(typeof(userEmail) !== typeof("")){response += "Email must be 'String'\n"}
-            if(typeof(userPassword) !== typeof("")){response += "Password must be 'String'\n"}
-            throw {
-                status: 400,
-                Error: `${response}`
-            }
+            throw checkEmail;
+        }
+        else if(checkPassword)
+        {
+            throw checkPassword
         }
         else if(!emailRegex.test(userEmail)){throw {status: 400, Error: "Fabricated email provided"}}
         else{
@@ -89,48 +86,35 @@ export const updateUserPassword = async (req,res) => {
         if(!req.body){
             throw {
                 status: 400,
-                Error: "No body found"
+                Error: "No User Credentialls found"
             }
         }
         else if(!req.query){
             throw {
-                status: 400,
-                Error: "No query found"
+                status: 401,
+                Error: "No User provided"
             }
         }
 
         const {password: userPassword} = req.body;
         const {UID: uid} = req.query;
         
-        if(!uid || !userPassword)
+        const checkPassword = basicStringCheck(userPassword,400,"Password")
+        const checkUid = basicStringCheck(uid,401,"UID")
+        if(checkPassword && checkUid)
         {
-            let response = ""
-            if(!userPassword){response += "Password wasn't sent!\n"}
-            if(!uid){
-                throw {
-                    status: 401,
-                    Error: response + "UID wasn't sent!\n"
-                }
-            }
             throw {
-                status: 400,
-                Error: `${response}`
+                status: 401,
+                Error: checkUid["Error"] + checkPassword["Error"]
             }
         }
-        else if(typeof(uid) !== typeof("") || typeof(userPassword) !== typeof(""))
+        else if(checkUid)
         {
-            let response = ""
-            if(typeof(userPassword) !== typeof("")){response += "Password must be 'String'\n"}
-            if(typeof(uid) !== typeof("")){
-                throw {
-                    status: 401,
-                    Error: response + "UID must be 'String'\n"
-                }
-            }
-            throw {
-                status: 400,
-                Error: `${response}`
-            }
+            throw checkUid;
+        }
+        else if(checkPassword)
+        {
+            throw checkPassword
         }
         else{
             const response = await usersAuthService.updatePassword(uid,userPassword);
@@ -142,3 +126,34 @@ export const updateUserPassword = async (req,res) => {
         res.status(error.status).json(error)
     }
 }
+
+export const deleteUser = async (req,res) => {
+    try{
+        if(!req.query){
+            throw {
+                status: 400,
+                Error: "No user provided"
+            }
+        }
+
+        const {UID: uid} = req.query;
+
+        const checkUid = basicStringCheck(uid,401,"UID")
+
+        if(checkUid)
+        {
+            throw checkUid;
+        }
+        else
+        {
+            const response = await usersAuthService.deleteUser(uid);
+            res.status(response.status).json(response)
+        }
+    }
+    catch(error)
+    {
+        res.status(error.status).json(error)
+    }
+}
+
+
