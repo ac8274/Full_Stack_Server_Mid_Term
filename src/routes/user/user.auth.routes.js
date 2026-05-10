@@ -6,8 +6,8 @@ const router = Router();
 router.post("/login",logInUser);
 router.post("/register",registerUser);
 
-router.patch("/updatePassword",updateUserPassword);
+router.patch("/updatePassword/:id",updateUserPassword);
 
-router.delete("/deleteUser",deleteUser)
+router.delete("/deleteUser/:id",deleteUser)
 
 export default router

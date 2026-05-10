@@ -89,35 +89,31 @@ export const updateUserPassword = async (req,res) => {
                 Error: "No User Credentialls found"
             }
         }
-        else if(!req.query){
-            throw {
-                status: 401,
-                Error: "No User provided"
-            }
-        }
 
-        const {password: userPassword} = req.body;
-        const {UID: uid} = req.query;
+        const {password: userPassword, coockie: userCoockie} = req.body;
+
+        const {id: uid} = req.params;
         
+        const checkCoockie = basicStringCheck(userCoockie,401,"Coockie")
         const checkPassword = basicStringCheck(userPassword,400,"Password")
-        const checkUid = basicStringCheck(uid,401,"UID")
-        if(checkPassword && checkUid)
+        
+        if(checkPassword && checkCoockie)
         {
             throw {
                 status: 401,
-                Error: checkUid["Error"] + checkPassword["Error"]
+                Error: checkCoockie["Error"] + checkPassword["Error"]
             }
         }
-        else if(checkUid)
+        else if(checkCoockie)
         {
-            throw checkUid;
+            throw checkCoockie;
         }
         else if(checkPassword)
         {
             throw checkPassword
         }
         else{
-            const response = await usersAuthService.updatePassword(uid,userPassword);
+            const response = await usersAuthService.updatePassword(uid,userPassword,userCoockie);
             res.status(response.status).json(response)
         }
     }
@@ -129,24 +125,25 @@ export const updateUserPassword = async (req,res) => {
 
 export const deleteUser = async (req,res) => {
     try{
-        if(!req.query){
+        if(!req.body){
             throw {
-                status: 400,
-                Error: "No user provided"
+                status: 404,
+                Error: "No Coockie found"
             }
         }
 
-        const {UID: uid} = req.query;
+        const {id: uid} = req.params;
+        const {coockie: userCoockie} = req.body;
 
-        const checkUid = basicStringCheck(uid,401,"UID")
+        const checkCoockie = basicStringCheck(userCoockie,401,"Coockie")
 
-        if(checkUid)
+        if(checkCoockie)
         {
-            throw checkUid;
+            throw checkCoockie;
         }
         else
         {
-            const response = await usersAuthService.deleteUser(uid);
+            const response = await usersAuthService.deleteUser(uid,userCoockie);
             res.status(response.status).json(response)
         }
     }

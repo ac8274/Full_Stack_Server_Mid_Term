@@ -1,12 +1,15 @@
 let usersDB = []
+let latestID = 1
 
 export const UsersDAL = {
-    addUser: (email, password,uid) => {
+    addUser: (email, password,coockie) => {
         usersDB.push({
             Email: `${email}`,
             Password: `${password}`,
-            UID: `${uid}`
+            UID: latestID.toString(),
+            Coockie: `${coockie}`
         })
+        latestID += 1
     },
     getUserByUID: (uid) => {
         const user = usersDB.find((userInfo) => {return userInfo["UID"] === uid})
