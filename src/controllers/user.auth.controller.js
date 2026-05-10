@@ -3,13 +3,13 @@ import { basicStringCheck } from "../utils/utility.js";
 
 export const registerUser = async (req,res) => {
     try{
-        if(!req.body){
+        if(!req.query){
             throw {
                 status: 400,
                 Error: "No User Credentialls found"
             }
         }
-        const {email: userEmail, password: userPassword} = req.body;
+        const {email: userEmail, password: userPassword} = req.query;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //found online
 
         const checkPassword = basicStringCheck(userPassword,400,"Password")
